@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap');
+
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: var(--bg-primary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 60px;
+  box-shadow: 0px 4px 4px -1px rgba(0, 0, 0, 0.08);
+  z-index: 1000;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* hide left placeholder if present */
+.nav-left { display: none; }
+
+/* Social icons moved to footer; navbar no longer contains them */
+
+.nav-links {
+  display: flex;
+  gap: 40px;
+}
+
+.nav-center {
+  display: flex;
+  flex: 1 1 auto;
+  justify-content: center;
+}
+
+.nav-right {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+}
+
+.nav-links a {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 18px;
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 16px;
+    height: 60px;
+  }
+
+  .social-icon img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .nav-links {
+    gap: 16px;
+  }
+
+  /* Ensure center container doesn't push content on mobile */
+  .nav-center {
+    justify-content: flex-end;
+  }
+
+  /* keep theme toggle visible on mobile */
+  .nav-right {
+    right: 10px;
+    top: 10px;
+  }
+
+  .nav-links a {
+    font-size: 16px;
+  }
+}
+
+/* Hamburger button (hidden on desktop) */
+.hamburger {
+  display: none;
+  background: transparent;
+  border: none;
+  width: 40px;
+  height: 40px;
+  flex-direction: column;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.hamburger span {
+  display: block;
+  height: 3px;
+  background: var(--text-primary);
+  border-radius: 3px;
+  transition: transform 180ms ease, opacity 180ms ease, background-color 0.3s ease;
+}
+
+.hamburger.open span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.open span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+/* Mobile menu styles */
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-links {
+    position: absolute;
+    top: 70px;
+    right: 0;
+    left: 0;
+    background: var(--bg-primary);
+    flex-direction: column;
+    gap: 0;
+    padding: 10px 20px;
+    display: none;
+    border-bottom: 1px solid var(--border-color);
+    transition: background-color 0.3s ease;
+  }
+
+  .nav-links.open {
+    display: flex;
+  }
+
+  .nav-links a {
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.04);
+  }
+
+  /* Reduce logo and font sizes slightly more to fit mobile */
+  .social-icon img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .nav-links a {
+    font-size: 16px;
+  }
+}

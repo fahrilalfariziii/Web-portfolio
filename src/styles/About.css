@@ -1,0 +1,158 @@
+.about {
+  padding: 150px 100px 100px;
+  display: grid;
+  grid-template-columns: minmax(300px, 514px) 1fr;
+  gap: 80px;
+  min-height: 100vh;
+  background: var(--bg-primary);
+  transition: background-color 0.3s ease;
+}
+
+.profile-image {
+  width: 100%;
+  height: 514px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.profile-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.about-content {
+  padding-top: 30px;
+}
+
+.about-content h1 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 64px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  transition: color 0.3s ease;
+}
+
+.link-email:hover {
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.5;
+  color: var(--accent-color);
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.about-content h2 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin-bottom: 40px;
+  transition: color 0.3s ease;
+}
+
+.about-content > p {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1.5;
+  text-align: justify;
+  color: var(--text-secondary);
+  margin-bottom: 40px;
+  max-width: 1105px;
+  transition: color 0.3s ease;
+}
+
+.education, .interests {
+  margin-top: 40px;
+}
+
+.about-bottom {
+  display: flex;
+  gap: 80px;
+  align-items: flex-start;
+  margin-top: 40px;
+}
+
+.link-credensial:hover {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1.5;
+  color: var(--accent-color);
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
+.about-bottom .education,
+.about-bottom .interests {
+  margin-top: 0; /* spacing handled by container */
+}
+
+.education h3, .interests h3 {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  font-size: 24px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  margin-bottom: 10px;
+  transition: color 0.3s ease;
+}
+
+.education h4, .education p,
+.interests p {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+@media (max-width: 1200px) {
+  .about {
+    padding: 120px 50px 50px;
+    gap: 40px;
+  }
+
+  .about-content h1 {
+    font-size: 48px;
+  }
+}
+
+@media (max-width: 768px) {
+  .about {
+    grid-template-columns: 1fr;
+    padding: 100px 30px 30px;
+  }
+
+  .profile-image {
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+  }
+
+  .about-content h1 {
+    font-size: 36px;
+  }
+
+  .about-content h2 {
+    font-size: 20px;
+  }
+
+  .about-content > p,
+  .education h4,
+  .education p,
+  .interests p {
+    font-size: 18px;
+  }
+
+  /* Stack education and interests on small screens */
+  .about-bottom {
+    flex-direction: column;
+    gap: 20px;
+  }
+}
