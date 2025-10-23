@@ -2,7 +2,7 @@
 
 A modern, responsive portfolio website built with React and Vite. Features a clean design with dark/light theme support and smooth animations.
 
-https://fahrilalfariziii.github.io/Web-portfolio/
+https://fahrilalfarizi.vercel.app
 
 ## 🚀 Features
 
