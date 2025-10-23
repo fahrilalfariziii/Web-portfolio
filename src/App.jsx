@@ -6,12 +6,14 @@ import Skills from './components/Skills'
 import Projects from './components/Projects'
 import Footer from './components/Footer'
 import { ThemeProvider } from './context/ThemeContext'
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import './App.css'
 
 function App() {
   return (
     <ThemeProvider>
       <div className="app">
+        <SpeedInsights />
         <Navbar />
         <main>
           <About />
@@ -22,6 +24,7 @@ function App() {
         <Footer />
       </div>
     </ThemeProvider>
+    
   )
 }
 

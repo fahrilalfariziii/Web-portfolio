@@ -19,6 +19,6 @@ main {
 
 @media (max-width: 768px) {
   main {
-    padding-top: 70px;
+    padding-top: 0;
   }
 }

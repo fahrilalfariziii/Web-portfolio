@@ -15,7 +15,7 @@ const Projects = () => {
       description: "This project is a thesis research that discusses the problem of selecting a coffee shop that is suitable for visitors.",
       technologies: ["Python", "TensorFlow", "BERT", "ResNet", "Neural CF", "NLP", "Pytorch"],
       year: "Fahril Sidik Alfarizi, 2025",
-      repoUrl: "#",
+      repoUrl: "https://github.com/fahrilalfariziii/Machine-Learning-Portfolio",
     },
     {
       title: "RecycleMe - waste classification with MobileNetV2",
