@@ -1,11 +1,18 @@
 import React from 'react';
+import { useEffect } from 'react';
+import { trackSectionView } from '../utils/analytics';
+import { asset } from '../utils/assetPath';
 import '../styles/About.css';
 
 const About = () => {
+  useEffect(() => {
+    trackSectionView('home');
+  }, []);
+
   return (
     <section id="home" className="about">
       <div className="profile-image">
-        <img src="/src/assets/profile.png" alt="Profile" />
+        <img src={asset('assets/profile.png')} alt="Profile" />
       </div>
       <div className="about-content">
         <h1>Fahril Sidik Alfarizi</h1>

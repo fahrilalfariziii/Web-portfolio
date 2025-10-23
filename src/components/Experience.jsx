@@ -1,7 +1,13 @@
 import React from "react";
+import { useEffect } from 'react';
+import { trackSectionView } from '../utils/analytics';
 import "../styles/Experience.css";
 
 const Experience = () => {
+  useEffect(() => {
+    trackSectionView('experience');
+  }, []);
+
   return (
     <section id="experience" className="experience">
       <h2>EXPERIENCE</h2>

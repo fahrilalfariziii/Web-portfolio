@@ -1,17 +1,24 @@
 import React from 'react';
+import { useEffect } from 'react';
+import { trackSectionView } from '../utils/analytics';
+import { asset } from '../utils/assetPath';
 import '../styles/Skills.css';
 
 const Skills = () => {
+  useEffect(() => {
+    trackSectionView('skills');
+  }, []);
+
   const skills = [
-    { name: 'Python', logo: '/src/assets/python_logo.svg', level: 90 },
-    { name: 'TensorFlow', logo: '/src/assets/tensorflow_logo.svg', level: 88 },
-    { name: 'PyTorch', logo: '/src/assets/pytorch_logo.svg', level: 75 },
-    { name: 'HTML', logo: '/src/assets/html_logo.svg', level: 70 },
-    { name: 'CSS', logo: '/src/assets/css_logo.svg', level: 88 },
-    { name: 'JavaScript', logo: '/src/assets/js_logo.svg', level: 82 },
-    { name: 'PHP', logo: '/src/assets/php_logo.svg', level: 60 },
-    { name: 'MySQL', logo: '/src/assets/mysql_logo.svg', level: 72 },
-    { name: 'Git', logo: '/src/assets/git_logo.svg', level: 80 },
+    { name: 'Python', logo: asset('assets/python_logo.svg'), level: 90 },
+    { name: 'TensorFlow', logo: asset('assets/tensorflow_logo.svg'), level: 88 },
+    { name: 'PyTorch', logo: asset('assets/pytorch_logo.svg'), level: 75 },
+    { name: 'HTML', logo: asset('assets/html_logo.svg'), level: 70 },
+    { name: 'CSS', logo: asset('assets/css_logo.svg'), level: 88 },
+    { name: 'JavaScript', logo: asset('assets/js_logo.svg'), level: 82 },
+    { name: 'PHP', logo: asset('assets/php_logo.svg'), level: 60 },
+    { name: 'MySQL', logo: asset('assets/mysql_logo.svg'), level: 72 },
+    { name: 'Git', logo: asset('assets/git_logo.svg'), level: 80 },
   ];
 
   return (

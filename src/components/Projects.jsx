@@ -1,7 +1,14 @@
 import React from "react";
+import { useEffect } from 'react';
+import { trackSectionView } from '../utils/analytics';
+import { asset } from '../utils/assetPath';
 import "../styles/Projects.css";
 
 const Projects = () => {
+  useEffect(() => {
+    trackSectionView('projects');
+  }, []);
+
   const projects = [
     {
       title: "Implementation of Neural Collaborative Filtering ResNet and BERT for Coffee Shop Recommender System Model Based on Images and User Reviews",
@@ -42,7 +49,7 @@ const Projects = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <img src="/src/assets/github_icon_2.svg" alt="GitHub" />
+                <img src={asset('assets/github_icon_2.svg')} alt="GitHub" />
                 <span>Repository</span>
               </a>
             </div>
