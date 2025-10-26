@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { trackSectionView } from '../utils/analytics';
 import { asset } from '../utils/assetPath';
-import projectsData from '../data/projects.json';
+import projectsData from '../data/Projects.json';
 import "../styles/Projects.css";
 
 const Projects = () => {
