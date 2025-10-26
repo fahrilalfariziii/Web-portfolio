@@ -1,0 +1,63 @@
+{
+    "project1": {
+        "title": "Implementation of Neural Collaborative Filtering ResNet and BERT for Coffee Shop Recommender System Model Based on Images and User Reviews",
+        "description": "This project is a thesis research that discusses the problem of selecting a coffee shop that is suitable for visitors.",
+        "technologies": [
+            "Python",
+            "TensorFlow",
+            "BERT",
+            "ResNet",
+            "Neural CF",
+            "NLP",
+            "Pytorch"
+        ],
+        "categories":"ML",
+        "year": "Fahril Sidik Alfarizi, 2025",
+        "repoUrl": "https://github.com/fahrilalfariziii/Machine-Learning-Portfolio/tree/main/Project%20Thesis"
+    },
+    "project2": {
+        "title": "Personal Portfolio Website",
+        "description": "portfolio projects used on this website.",
+        "technologies": [
+            "HTML",
+            "CSS",
+            "React",
+            "Vite",
+            "JavaScript"
+        ],
+        "categories":"Web",
+        "year": "Fahril Sidik Alfarizi, 2025",
+        "webURL": "https://fahrilalfarizi.vercel.app/",
+        "repoUrl": "https://github.com/fahrilalfariziii/Web-portfolio"
+    },
+    "project3": {
+        "title": "Addition of Bapokting Features to the UPT Mapping GIS website",
+        "description": "This project develops a feature to display the prices of essential staples in each market area.",
+        "technologies": [
+            "HTML",
+            "CSS",
+            "PHP",
+            "CodeIgniter",
+            "MySQL"
+        ],
+        "categories":"Web",
+        "year": "Team, 2024",
+        "webURL": "http://bapokting.disperindag.garutkab.go.id/Bapokting",
+        "repoUrl": ""
+    },
+    "project4": {
+        "title": "RecycleMe - Waste Classification with MobileNetV2",
+        "description": "This capstone project classifies and detects waste with 5 waste categories.",
+        "technologies": [
+            "Python",
+            "TensorFlow",
+            "MobileNetV2",
+            "Classification",
+            "CNN",
+            "REST API"
+        ],
+        "categories":"ML",
+        "year": "Capstone Team, 2024",
+        "repoUrl": "https://github.com/Juli-Yash/RecycleMe"
+    }
+}

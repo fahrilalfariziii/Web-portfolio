@@ -14,6 +14,12 @@
   box-shadow: 0px 4px 4px -1px rgba(0, 0, 0, 0.08);
   z-index: 1000;
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  /* Ensure proper stacking and hardware acceleration */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  /* Fallback for older browsers */
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 .nav-right {
@@ -61,6 +67,8 @@
   .navbar {
     padding: 0 16px;
     height: 60px;
+    /* Ensure hamburger is always visible */
+    position: fixed;
   }
 
   .social-icon img {
@@ -81,10 +89,20 @@
   .nav-right {
     right: 10px;
     top: 10px;
+    z-index: 1002;
   }
 
   .nav-links a {
     font-size: 16px;
+  }
+  
+  /* Ensure hamburger button is always visible and clickable */
+  .hamburger {
+    position: relative;
+    z-index: 1003;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 }
 
@@ -97,37 +115,54 @@
   height: 40px;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: 6px;
   cursor: pointer;
+  position: relative;
+  z-index: 1001;
+  /* Fallback for older browsers */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
 }
 
 .hamburger span {
   display: block;
   height: 3px;
+  width: 24px;
   background: var(--text-primary);
   border-radius: 3px;
   transition: transform 180ms ease, opacity 180ms ease, background-color 0.3s ease;
+  /* Ensure visibility on all browsers */
+  -webkit-transition: transform 180ms ease, opacity 180ms ease, background-color 0.3s ease;
+  -moz-transition: transform 180ms ease, opacity 180ms ease, background-color 0.3s ease;
 }
 
 .hamburger.open span:nth-child(1) {
   transform: translateY(6px) rotate(45deg);
+  -webkit-transform: translateY(6px) rotate(45deg);
+  -moz-transform: translateY(6px) rotate(45deg);
 }
 .hamburger.open span:nth-child(2) {
   opacity: 0;
 }
 .hamburger.open span:nth-child(3) {
   transform: translateY(-6px) rotate(-45deg);
+  -webkit-transform: translateY(-6px) rotate(-45deg);
+  -moz-transform: translateY(-6px) rotate(-45deg);
 }
 
-/* Mobile menu styles */
-@media (max-width: 768px) {
+/* Mobile menu styles - Enhanced for better browser compatibility */
+@media screen and (max-width: 768px) {
   .hamburger {
-    display: flex;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
   .nav-links {
     position: absolute;
-    top: 70px;
+    top: 60px;
     right: 0;
     left: 0;
     background: var(--bg-primary);
@@ -137,15 +172,23 @@
     display: none;
     border-bottom: 1px solid var(--border-color);
     transition: background-color 0.3s ease;
+    z-index: 1000;
+    /* Ensure proper stacking */
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
   }
 
   .nav-links.open {
-    display: flex;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 
   .nav-links a {
     padding: 12px 0;
     border-bottom: 1px solid rgba(0,0,0,0.04);
+    display: block !important;
+    visibility: visible !important;
   }
 
   /* Reduce logo and font sizes slightly more to fit mobile */
@@ -156,5 +199,32 @@
 
   .nav-links a {
     font-size: 16px;
+  }
+}
+
+/* Additional mobile breakpoints for better compatibility */
+@media screen and (max-width: 480px) {
+  .hamburger {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 35px;
+    height: 35px;
+  }
+  
+  .hamburger span {
+    width: 20px;
+    height: 2px;
+  }
+}
+
+/* Fallback for very small screens */
+@media screen and (max-width: 320px) {
+  .hamburger {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    width: 32px;
+    height: 32px;
   }
 }

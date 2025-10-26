@@ -13,8 +13,40 @@
   letter-spacing: 0.3em;
   color: var(--text-primary);
   text-align: center;
-  margin-bottom: 60px;
+  margin-bottom: 40px;
   transition: color 0.3s ease;
+}
+
+.filter-buttons {
+  display: flex;
+  justify-content: flex-start;
+  gap: 12px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 6px 16px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.filter-btn:hover {
+  background: var(--bg-primary);
+  transform: scale(1.05);
+}
+
+.filter-btn.active {
+  background: var(--accent-color);
+  color: var(--bg-primary);
+  border-color: var(--accent-color);
 }
 
 .projects-grid {
@@ -80,6 +112,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.project-links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
 .project-footer span {
@@ -131,6 +171,32 @@
   transition: border-color 0.3s ease;
 }
 
+.show-more-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.show-more-btn {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 18px;
+  padding: 12px 40px;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.show-more-btn:hover {
+  background: var(--accent-color);
+  color: var(--bg-primary);
+  border-color: var(--accent-color);
+  transform: scale(1.05);
+}
+
 @media (max-width: 768px) {
   .projects {
     padding: 50px 20px;
@@ -138,7 +204,17 @@
 
   .projects h2 {
     font-size: 28px;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
+  }
+
+  .filter-buttons {
+    gap: 8px;
+    margin-bottom: 30px;
+  }
+
+  .filter-btn {
+    font-size: 12px;
+    padding: 5px 12px;
   }
 
   .project-card h3 {
@@ -167,5 +243,14 @@
   .project-tech {
     gap: 8px;
     margin-bottom: 20px;
+  }
+
+  .show-more-container {
+    margin-top: 30px;
+  }
+
+  .show-more-btn {
+    font-size: 16px;
+    padding: 10px 30px;
   }
 }

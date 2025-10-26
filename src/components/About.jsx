@@ -16,9 +16,9 @@ const About = () => {
       </div>
       <div className="about-content">
         <h1>Fahril Sidik Alfarizi</h1>
-        <h2><a className="link-email" href="mailto:fahrilsidik207@gmail.com" target="_blank">fahrilsidik207@gmail.com</a> | West Java, Indonesia</h2>
+        <h2>AI/ML Engineer | Data Scientist | Frontend Developer</h2>
         <p>
-          I am a Machine Learning Engineer with a focus on Machine Learning and Deep Learning.
+          I am a AI Engineer with a focus on Machine Learning and Deep Learning.
           I am a Computer Science/Information Engineering graduate from the Garut Institute of Technology
           and a graduate of Bangkit Academy 2024 Batch 1 (Machine Learning path). I have experience
           building deep learning models using TensorFlow, from data processing to implementation,

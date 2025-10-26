@@ -13,6 +13,7 @@
   height: 514px;
   border-radius: 50%;
   overflow: hidden;
+  margin-top: 100px;
 }
 
 .profile-image img {
@@ -77,10 +78,6 @@
 }
 
 .link-credensial:hover {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 400;
-  font-size: 24px;
-  line-height: 1.5;
   color: var(--accent-color);
   text-decoration: underline;
   transition: color 0.3s ease;
@@ -112,7 +109,7 @@
   transition: color 0.3s ease;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1440px) {
   .about {
     padding: 120px 50px 50px;
     gap: 40px;
@@ -122,6 +119,35 @@
     font-size: 48px;
   }
 }
+
+@media (max-width: 1124px) {
+  .about {
+    grid-template-columns: 1fr;
+    padding: 120px 50px 50px;
+    gap: 60px;
+  }
+
+  .profile-image {
+    width: 400px;
+    height: 400px;
+    margin: 0 auto;
+  }
+
+  .about-content h1 {
+    font-size: 42px;
+  }
+
+  .about-content h2 {
+    font-size: 22px;
+  }
+
+  .about-content > p,
+  .education h4,
+  .education p,
+  .interests p {
+    font-size: 20px;
+  }
+ }
 
 @media (max-width: 768px) {
   .about {

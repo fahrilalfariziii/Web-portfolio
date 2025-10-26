@@ -1,9 +1,30 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/Navbar.css';
 import ThemeToggle from './ThemeToggle';
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+
+  // Ensure hamburger menu is visible on mobile
+  useEffect(() => {
+    const handleResize = () => {
+      const isMobile = window.innerWidth <= 768;
+      const hamburger = document.querySelector('.hamburger');
+      if (hamburger && isMobile) {
+        hamburger.style.display = 'flex';
+        hamburger.style.visibility = 'visible';
+        hamburger.style.opacity = '1';
+      }
+    };
+
+    // Check on mount
+    handleResize();
+    
+    // Check on resize
+    window.addEventListener('resize', handleResize);
+    
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <nav className="navbar">
@@ -13,6 +34,11 @@ const Navbar = () => {
         onClick={() => setOpen(!open)}
         aria-label="Toggle navigation"
         aria-expanded={open}
+        style={{
+          display: window.innerWidth <= 768 ? 'flex' : 'none',
+          visibility: window.innerWidth <= 768 ? 'visible' : 'hidden',
+          opacity: window.innerWidth <= 768 ? '1' : '0'
+        }}
       >
         <span />
         <span />

@@ -34,6 +34,12 @@
   transition: color 0.3s ease;
 }
 
+.link-web:hover {
+  color: var(--accent-color);
+  text-decoration: underline;
+  transition: color 0.3s ease;
+}
+
 /* No standalone styles needed for .professional; spacing is handled by the flex gap on the parent */
 
 .experience h3 .professional {

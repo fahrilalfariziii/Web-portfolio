@@ -1,36 +1,61 @@
-import React from "react";
-import { useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import { trackSectionView } from '../utils/analytics';
 import { asset } from '../utils/assetPath';
+import projectsData from '../data/projects.json';
 import "../styles/Projects.css";
 
 const Projects = () => {
+  const [filter, setFilter] = useState("all");
+  const [showAll, setShowAll] = useState(false);
+
   useEffect(() => {
     trackSectionView('projects');
   }, []);
 
-  const projects = [
-    {
-      title: "Implementation of Neural Collaborative Filtering ResNet and BERT for Coffee Shop Recommender System Model Based on Images and User Reviews",
-      description: "This project is a thesis research that discusses the problem of selecting a coffee shop that is suitable for visitors.",
-      technologies: ["Python", "TensorFlow", "BERT", "ResNet", "Neural CF", "NLP", "Pytorch"],
-      year: "Fahril Sidik Alfarizi, 2025",
-      repoUrl: "https://github.com/fahrilalfariziii/Machine-Learning-Portfolio",
-    },
-    {
-      title: "RecycleMe - waste classification with MobileNetV2",
-      description: "This capstone project classifies and detects waste with 5 waste categories",
-      technologies: ["Python", "TensorFlow", "MobileNetV2", "Android Studio", "Firebase", "REST API"],
-      year: "Team Capstone, 2024",
-      repoUrl: "https://github.com/Juli-Yash/RecycleMe",
-    },
-  ];
+  // Reset showAll when filter changes
+  useEffect(() => {
+    setShowAll(false);
+  }, [filter]);
+
+  // Convert JSON object to array
+  const projects = Object.values(projectsData);
+
+  // Filter projects based on selected category
+  const filteredProjects = filter === "all" 
+    ? projects 
+    : projects.filter(project => project.categories === filter);
+
+  // Determine which projects to display
+  const shouldShowMoreButton = filteredProjects.length > 3;
+  const displayedProjects = shouldShowMoreButton && !showAll 
+    ? filteredProjects.slice(0, 3)
+    : filteredProjects;
 
   return (
     <section id="projects" className="projects">
       <h2>PROJECTS</h2>
+      <div className="filter-buttons">
+        <button 
+          className={`filter-btn ${filter === "all" ? "active" : ""}`}
+          onClick={() => setFilter("all")}
+        >
+          All
+        </button>
+        <button 
+          className={`filter-btn ${filter === "ML" ? "active" : ""}`}
+          onClick={() => setFilter("ML")}
+        >
+          ML
+        </button>
+        <button 
+          className={`filter-btn ${filter === "Web" ? "active" : ""}`}
+          onClick={() => setFilter("Web")}
+        >
+          Web
+        </button>
+      </div>
       <div className="projects-grid">
-        {projects.map((project, index) => (
+        {displayedProjects.map((project, index) => (
           <div key={index} className="project-card">
             <h3>{project.title}</h3>
             <p>{project.description}</p>
@@ -43,19 +68,43 @@ const Projects = () => {
             </div>
             <div className="project-footer">
               <span>{project.year}</span>
-              <a
-                href={project.repoUrl}
-                className="repo-link"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img src={asset('assets/github_icon_2.svg')} alt="GitHub" />
-                <span>Repository</span>
-              </a>
+              <div className="project-links">
+                {project.webURL && (
+                  <a
+                    href={project.webURL}
+                    className="repo-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <span>View Site</span>
+                  </a>
+                )}
+                {project.repoUrl && (
+                  <a
+                    href={project.repoUrl}
+                    className="repo-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img src={asset('assets/github_icon_2.svg')} alt="GitHub" />
+                    <span>Repository</span>
+                  </a>
+                )}
+              </div>
             </div>
           </div>
         ))}
       </div>
+      {shouldShowMoreButton && !showAll && (
+        <div className="show-more-container">
+          <button 
+            className="show-more-btn"
+            onClick={() => setShowAll(true)}
+          >
+            Show More
+          </button>
+        </div>
+      )}
     </section>
   );
 };

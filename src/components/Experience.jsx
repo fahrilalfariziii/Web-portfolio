@@ -32,7 +32,7 @@ const Experience = () => {
                 MySQL database.
               </li>
               <li>
-                <a className="link-credensial" href="http://bapokting.disperindag.garutkab.go.id/Bapokting" target="blank">Visit Site&#8599;</a>
+                <a className="link-web" href="http://bapokting.disperindag.garutkab.go.id/Bapokting" target="blank">Visit Site&#8599;</a>
               </li>
             </ul>
           </div>
