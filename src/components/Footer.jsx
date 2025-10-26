@@ -6,17 +6,6 @@ const Footer = () => {
   return (
     <footer id="contact" className="footer">
       <div className="footer-content">
-        <div className="footer-socials-centered">
-          <a href="https://www.instagram.com/fhrilalfrz?igsh=MXlyazc2dTMxc2pmaQ==" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <img src={asset('assets/instagram.svg')} alt="Instagram" />
-          </a>
-          <a href="https://github.com/fahrilalfariziii" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-            <img src={asset('assets/github.svg')} alt="GitHub" />
-          </a>
-          <a href="https://www.linkedin.com/in/fahril-sidik-alfarizi/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-            <img src={asset('assets/linkedin.svg')} alt="LinkedIn" />
-          </a>
-        </div>
         <div className="footer-license">
           <span className="copyright">© 2025 | Fahril Sidik Alfarizi</span>
         </div>

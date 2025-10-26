@@ -11,8 +11,21 @@ const About = () => {
 
   return (
     <section id="home" className="about">
-      <div className="profile-image">
-        <img src={asset('assets/profile.png')} alt="Profile" />
+      <div className="profile-section">
+        <div className="profile-image">
+          <img src={asset('assets/profile.png')} alt="Profile" />
+        </div>
+        <div className="social-links">
+          <a href="https://www.linkedin.com/in/fahril-sidik-alfarizi/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <img src={asset('assets/linkedin.svg')} alt="LinkedIn" />
+          </a>
+          <a href="https://www.instagram.com/fhrilalfrz?igsh=MXlyazc2dTMxc2pmaQ==" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <img src={asset('assets/instagram.svg')} alt="Instagram" />
+          </a>
+          <a href="https://github.com/fahrilalfariziii" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+            <img src={asset('assets/github.svg')} alt="GitHub" />
+          </a>
+        </div>
       </div>
       <div className="about-content">
         <h1>Fahril Sidik Alfarizi</h1>
