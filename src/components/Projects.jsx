@@ -53,6 +53,18 @@ const Projects = () => {
         >
           Web
         </button>
+        <button 
+          className={`filter-btn ${filter === "CV" ? "active" : ""}`}
+          onClick={() => setFilter("CV")}
+        >
+          CV
+        </button>
+        <button 
+          className={`filter-btn ${filter === "NLP" ? "active" : ""}`}
+          onClick={() => setFilter("NLP")}
+        >
+          NLP
+        </button>
       </div>
       <div className="projects-grid">
         {displayedProjects.map((project, index) => (
