@@ -59,5 +59,47 @@
         "categories":"ML",
         "year": "Capstone Team, 2024",
         "repoUrl": "https://github.com/Juli-Yash/RecycleMe"
+    },
+    "project5": {
+        "title": "RAG - Garuda Indonesia Annual Report 2025",
+        "description": "Project to analyze Garuda Indonesia's annual report using RAG (Retrieval-Augmented Generation) method to assess the company's financial.",
+        "technologies": [
+            "Python",
+            "RAG",
+            "LLM",
+            "Streamlit",
+            "REST API",
+            "Docker"
+        ],
+        "categories":"ML",
+        "year": "Fahril Sidik Alfarizi, 2026",
+        "repoUrl": "https://github.com/fahrilalfariziii/Machine-Learning-Portfolio/tree/main/Other%20Projects/garuda-financial-rag"
+    },
+    "project6": {
+        "title": "PPE Safety Detection Service",
+        "description": "This project develops a PPE (Personal Protective Equipment) safety detection service that can detect whether workers are wearing the required safety equipment in a construction site.",
+        "technologies": [
+            "Python",
+            "OpenCV",
+            "YOLOv10",
+            "FastAPI"
+        ],
+        "categories":"CV",
+        "year": "Fahril Sidik Alfarizi, 2026",
+        "repoUrl": "https://github.com/fahrilalfariziii/Machine-Learning-Portfolio/tree/main/Other%20Projects/ppe-safety-service"
+    },
+    "project7": {
+        "title": "Purchase Conversion Prediction Platform",
+        "description": "An end-to-end machine learning project building an e-commerce user conversion probability prediction system.",
+        "technologies": [
+            "Python",
+            "Docker",
+            "CatBoost",
+            "Streamlit",
+            "FastAPI"
+        ],
+        "categories":"NLP",
+        "year": "Fahril Sidik Alfarizi, 2026",
+        "repoUrl": "https://github.com/fahrilalfariziii/Machine-Learning-Portfolio/tree/main/Other%20Projects/purchase-conversion-platform"
     }
 }
