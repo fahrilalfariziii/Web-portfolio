@@ -1,0 +1,32 @@
+{
+    "project1": {
+        "title": "Lead Qualification Sales Workflow Automation",
+        "description": "This project is a workflow that automates the process of qualifying leads for sales teams.",
+        "technologies": [
+            "Gmail",
+            "Groq LLM",
+            "Telegram",
+            "Slack",
+            "Supabase",
+            "Rest API"
+        ],
+        "categories":"n8n",
+        "year": "Fahril Sidik Alfarizi, 2026",
+        "repoUrl": "https://github.com/fahrilalfariziii/n8n-workflow-portfolio/tree/main/Lead-Qualification-Sales"
+    },
+    "Project2": {
+        "title": "AI Employee Helpdesk & IT Ticket Routing + RAG",
+        "description": "This project is a workflow that automates the process of routing IT tickets to the appropriate department and providing AI-powered assistance to employees.",
+        "technologies": [
+            "Groq LLM",
+            "Telegram",
+            "Supabase",
+            "Pinecone",
+            "Hugging Face Embeddings",
+            "Rest API"
+        ],
+        "categories":"n8n",
+        "year": "Fahril Sidik Alfarizi, 2026",
+        "repoUrl": "https://github.com/fahrilalfariziii/n8n-workflow-portfolio/tree/main/RAG-Helpdesk-IT%20and-Ticket-Routing"
+    }
+}

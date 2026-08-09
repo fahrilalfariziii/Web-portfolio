@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { trackSectionView } from '../utils/analytics';
 import { asset } from '../utils/assetPath';
 import projectsData from '../data/Projects.json';
+import projectsData2 from '../data/Projects2.json';
 import "../styles/Projects.css";
 
 const Projects = () => {
@@ -17,8 +18,9 @@ const Projects = () => {
     setShowAll(false);
   }, [filter]);
 
-  // Convert JSON object to array
-  const projects = Object.values(projectsData);
+  // Combine JSON objects and convert to array
+  const allProjectsData = { ...projectsData, ...projectsData2 };
+  const projects = Object.values(allProjectsData);
 
   // Filter projects based on selected category
   const filteredProjects = filter === "all" 
@@ -65,6 +67,12 @@ const Projects = () => {
         >
           NLP
         </button>
+        <button 
+          className={`filter-btn ${filter === "n8n" ? "active" : ""}`}
+          onClick={() => setFilter("n8n")}
+        >
+          n8n
+        </button>
       </div>
       <div className="projects-grid">
         {displayedProjects.map((project, index) => (
@@ -109,12 +117,23 @@ const Projects = () => {
       </div>
       {shouldShowMoreButton && !showAll && (
         <div className="show-more-container">
-          <button 
-            className="show-more-btn"
-            onClick={() => setShowAll(true)}
-          >
-            Show More
-          </button>
+          {filter === "all" ? (
+            <a
+              href="https://github.com/fahrilalfariziii"
+              className="show-more-btn"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Show More
+            </a>
+          ) : (
+            <button 
+              className="show-more-btn"
+              onClick={() => setShowAll(true)}
+            >
+              Show More
+            </button>
+          )}
         </div>
       )}
     </section>
