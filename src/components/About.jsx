@@ -19,7 +19,7 @@ const About = () => {
           <a href="https://www.linkedin.com/in/fahril-sidik-alfarizi/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
             <img src={asset('assets/linkedin.svg')} alt="LinkedIn" />
           </a>
-          <a href="https://www.instagram.com/fhrilalfrz?igsh=MXlyazc2dTMxc2pmaQ==" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+          <a href="https://www.instagram.com/fhrlalfrz_?igsh=bGMxcG1yNWxjdjdu" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
             <img src={asset('assets/instagram.svg')} alt="Instagram" />
           </a>
           <a href="https://github.com/fahrilalfariziii" target="_blank" rel="noopener noreferrer" aria-label="GitHub">

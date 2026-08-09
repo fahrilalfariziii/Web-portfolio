@@ -101,5 +101,19 @@
         "categories":"NLP",
         "year": "Fahril Sidik Alfarizi, 2026",
         "repoUrl": "https://github.com/fahrilalfariziii/Machine-Learning-Portfolio/tree/main/Other%20Projects/purchase-conversion-platform"
+    },
+    "project8": {
+        "title": "MLOps-Driven Real-Time Fraud Detection System",
+        "description": "This project is an end-to-end machine learning project that builds a real-time fraud detection system using MLOps practices.",
+        "technologies": [
+            "Python",
+            "Docker",
+            "LightGBM",
+            "MLflow",
+            "FastAPI"
+        ],
+        "categories":"ML",
+        "year": "Fahril Sidik Alfarizi, 2026",
+        "repoUrl": "https://github.com/fahrilalfariziii/Machine-Learning-Portfolio/tree/main/Other%20Projects/fraud-detection-mlops"
     }
 }
