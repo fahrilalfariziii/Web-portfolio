@@ -17,6 +17,7 @@ const Skills = () => {
     { name: 'React', logo: asset('assets/react.svg'), level: 78 },
     { name: 'PHP', logo: asset('assets/php_logo.svg'), level: 70 },
     { name: 'MySQL', logo: asset('assets/mysql_logo.svg'), level: 72 },
+    { name: 'n8n', logo: asset('assets/n8n-color.svg'), level: 75 },
     { name: 'TensorFlow', logo: asset('assets/tensorflow_logo.svg'), level: 88 },
     { name: 'PyTorch', logo: asset('assets/pytorch_logo.svg'), level: 75 },
     { name: 'Hugging Face', logo: asset('assets/hf-logo.svg'), level: 70 },
