@@ -29,7 +29,7 @@ const About = () => {
       </div>
       <div className="about-content">
         <h1>Fahril Sidik Alfarizi</h1>
-        <h2>AI/ML Engineer| AI Automation | Data Scientist | Frontend Developer</h2>
+        <h2>AI/ML Engineer | AI Automation | Data Scientist | Frontend Developer</h2>
         <p>
           I am a AI Engineer with a focus on Machine Learning and Deep Learning.
           I am a Computer Science/Information Engineering graduate from the Garut Institute of Technology
