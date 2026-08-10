@@ -28,5 +28,19 @@
         "categories":"n8n",
         "year": "Fahril Sidik Alfarizi, 2026",
         "repoUrl": "https://github.com/fahrilalfariziii/n8n-workflow-portfolio/tree/main/RAG-Helpdesk-IT%20and-Ticket-Routing"
+    },
+    "Project3": {
+        "title": "AI Recruitment CV Screening Workflow",
+        "description": "This project is a workflow that automates the process of screening CVs for recruitment purposes.",
+        "technologies": [
+            "Groq API",
+            "Telegram",
+            "Google Cloud OAuth2",
+            "Gmail",
+            "Rest API"
+        ],
+        "categories":"n8n",
+        "year": "Fahril Sidik Alfarizi, 2026",
+        "repoUrl": "https://github.com/fahrilalfariziii/n8n-workflow-portfolio/tree/main/AI%20Recruitment%20Screening"
     }
 }
