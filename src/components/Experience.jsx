@@ -1,6 +1,7 @@
 import React from "react";
 import { useEffect } from 'react';
 import { trackSectionView } from '../utils/analytics';
+import { isSafeUrl } from '../utils/url';
 import { usePortfolioContext } from '../context/PortfolioContext';
 import "../styles/Experience.css";
 
@@ -23,9 +24,9 @@ const Experience = () => {
         {(item.bullets || []).map((b, i) => (
           <li key={i}>{b}</li>
         ))}
-        {item.link_url && (
+        {item.link_url && isSafeUrl(item.link_url) && (
           <li>
-            <a className="link-web" href={item.link_url} target="blank" rel="noopener noreferrer">Visit Site&#8599;</a>
+            <a className="link-web" href={item.link_url} target="_blank" rel="noopener noreferrer">Visit Site&#8599;</a>
           </li>
         )}
       </ul>

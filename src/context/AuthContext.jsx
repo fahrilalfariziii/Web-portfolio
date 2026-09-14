@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { supabase, isSupabaseConfigured } from '../lib/supabase';
+import { login as apiLogin, logout as apiLogout, getStoredUser, isAuthenticated } from '../lib/apiClient';
 
 const AuthContext = createContext({ user: null, loading: true, signIn: async () => {}, signOut: async () => {} });
 
@@ -9,29 +9,26 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!isSupabaseConfigured || !supabase) {
-      setLoading(false);
-      return;
+    // Check token existence; server verifies actual validity on /api calls
+    const u = getStoredUser();
+    if (u && u.exp && u.exp * 1000 > Date.now()) {
+      setUser({ email: u.email, id: u.id });
+    } else if (isAuthenticated()) {
+      // Token present but expired or undecodable - treat as user
+      const fallback = getStoredUser();
+      if (fallback) setUser({ email: fallback.email });
     }
-    supabase.auth.getSession().then(({ data }) => {
-      setUser(data?.session?.user ?? null);
-      setLoading(false);
-    });
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
-    });
-    return () => sub?.subscription?.unsubscribe();
+    setLoading(false);
   }, []);
 
   const signIn = async (email, password) => {
-    if (!supabase) throw new Error('Supabase belum dikonfigurasi. Isi VITE_SUPABASE_URL dan VITE_SUPABASE_ANON_KEY.');
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-    if (error) throw error;
+    const data = await apiLogin(email, password);
+    setUser(data.user || { email });
     return data.user;
   };
 
   const signOut = async () => {
-    if (supabase) await supabase.auth.signOut();
+    await apiLogout();
     setUser(null);
   };
 

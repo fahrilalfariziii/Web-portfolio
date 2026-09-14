@@ -1,7 +1,11 @@
 export function loadGA(measurementId) {
   if (!measurementId) return;
+  // Validate measurementId format G-XXXXXXXXXX
+  if (!/^G-[A-Z0-9]{6,20}$/.test(measurementId)) {
+    console.warn('[ga] Measurement ID tidak valid, skip load');
+    return;
+  }
 
-  // create script tag to load gtag.js
   const existing = document.querySelector(`script[data-gtm-id="${measurementId}"]`);
   if (existing) return;
 
@@ -12,6 +16,7 @@ export function loadGA(measurementId) {
   document.head.appendChild(script);
 
   const inline = document.createElement('script');
-  inline.innerHTML = `window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${measurementId}');`;
+  // Use textContent instead of innerHTML to avoid XSS if measurementId ever attacker-controlled
+  inline.textContent = `window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${measurementId}');`;
   document.head.appendChild(inline);
 }

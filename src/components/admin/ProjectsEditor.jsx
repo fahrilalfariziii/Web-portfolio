@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { adminList, adminCreate, adminUpdate, adminDelete } from '../../lib/apiClient';
+import { isSafeUrl } from '../../utils/url';
 
 const CATEGORIES = ['ML', 'Web', 'CV', 'NLP', 'n8n'];
 const blank = {
@@ -13,37 +14,38 @@ const ProjectsEditor = () => {
   const [form, setForm] = useState(blank);
   const [editingId, setEditingId] = useState(null);
   const [msg, setMsg] = useState('');
+  const [msgType, setMsgType] = useState('notice');
 
   const load = async () => {
-    const { data } = await supabase.from('projects').select('*').order('sort_order');
-    if (data) setRows(data);
+    try { const data = await adminList('projects'); setRows(data); } catch(e){setMsg(e.message); setMsgType('error');}
   };
   useEffect(() => { load(); }, []);
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setMsg('');
+    if (form.web_url && !isSafeUrl(form.web_url)) { setMsg('Web URL harus https/http'); setMsgType('error'); return; }
+    if (form.repo_url && !isSafeUrl(form.repo_url)) { setMsg('Repo URL harus https/http'); setMsgType('error'); return; }
     const payload = {
-      title: form.title,
-      description: form.description,
-      technologies: form.technologies.split(',').map((s) => s.trim()).filter(Boolean),
+      title: form.title.trim(),
+      description: form.description.trim(),
+      technologies: form.technologies.split(',').map((s) => s.trim()).filter(Boolean).slice(0,12),
       category: form.category,
-      year_text: form.year_text,
+      year_text: form.year_text.trim(),
       web_url: form.web_url || '',
       repo_url: form.repo_url || '',
       sort_order: Number(form.sort_order) || 0,
       is_visible: Boolean(form.is_visible),
     };
-    const { error } = editingId
-      ? await supabase.from('projects').update(payload).eq('id', editingId)
-      : await supabase.from('projects').insert(payload);
-    if (error) setMsg(`Gagal: ${error.message}`);
-    else {
-      setMsg('Tersimpan.');
+    if (payload.title.length < 2 || payload.title.length > 80) { setMsg('Judul 2-80 karakter'); setMsgType('error'); return; }
+    try {
+      if (editingId) await adminUpdate('projects', editingId, payload);
+      else await adminCreate('projects', payload);
+      setMsg('Tersimpan.'); setMsgType('notice');
       setForm(blank);
       setEditingId(null);
       load();
-    }
+    } catch (err) { setMsg(`Gagal: ${err.message}`); setMsgType('error'); }
   };
 
   const onEdit = (r) => {
@@ -61,21 +63,21 @@ const ProjectsEditor = () => {
 
   return (
     <div>
-      {msg && <p className="admin-notice">{msg}</p>}
+      {msg && <p className={msgType==='error'?'admin-error':'admin-notice'}>{msg}</p>}
       <form className="admin-form" onSubmit={onSubmit}>
-        <label>Judul<input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required /></label>
-        <label>Deskripsi<textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} /></label>
-        <label>Teknologi (pisahkan koma)<input value={form.technologies} onChange={(e) => setForm({ ...form, technologies: e.target.value })} placeholder="Python, TensorFlow, FastAPI" /></label>
+        <label>Judul<input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required maxLength={80} /></label>
+        <label>Deskripsi<textarea rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} maxLength={500} /></label>
+        <label>Teknologi (pisahkan koma, max 12)<input value={form.technologies} onChange={(e) => setForm({ ...form, technologies: e.target.value })} placeholder="Python, TensorFlow, FastAPI" /></label>
         <div className="admin-grid3">
           <label>Kategori<select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
             {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
           </select></label>
-          <label>Tahun/teks<input value={form.year_text} onChange={(e) => setForm({ ...form, year_text: e.target.value })} placeholder="Fahril Sidik Alfarizi, 2026" /></label>
+          <label>Tahun/teks<input value={form.year_text} onChange={(e) => setForm({ ...form, year_text: e.target.value })} placeholder="Fahril Sidik Alfarizi, 2026" maxLength={60} /></label>
           <label>Urutan<input type="number" value={form.sort_order} onChange={(e) => setForm({ ...form, sort_order: e.target.value })} /></label>
         </div>
         <div className="admin-grid2">
-          <label>Web URL<input value={form.web_url} onChange={(e) => setForm({ ...form, web_url: e.target.value })} /></label>
-          <label>Repo URL<input value={form.repo_url} onChange={(e) => setForm({ ...form, repo_url: e.target.value })} /></label>
+          <label>Web URL<input type="url" value={form.web_url} onChange={(e) => setForm({ ...form, web_url: e.target.value })} placeholder="https://..." /></label>
+          <label>Repo URL<input type="url" value={form.repo_url} onChange={(e) => setForm({ ...form, repo_url: e.target.value })} placeholder="https://..." /></label>
         </div>
         <label className="admin-check"><input type="checkbox" checked={form.is_visible} onChange={(e) => setForm({ ...form, is_visible: e.target.checked })} /> Tampilkan di landing page</label>
         <div className="admin-row">
@@ -97,7 +99,7 @@ const ProjectsEditor = () => {
             </div>
             <div className="admin-row">
               <button className="admin-btn small" onClick={() => onEdit(r)}>Edit</button>
-              <button className="admin-btn small danger" onClick={async () => { if (confirm('Hapus project ini?')) { await supabase.from('projects').delete().eq('id', r.id); load(); } }}>Hapus</button>
+              <button className="admin-btn small danger" onClick={async () => { if (confirm('Hapus project ini?')) { try{await adminDelete('projects', r.id); load();}catch(e){setMsg(e.message); setMsgType('error');} } }}>Hapus</button>
             </div>
           </div>
         ))}

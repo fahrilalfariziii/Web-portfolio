@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { trackSectionView } from '../utils/analytics';
+import { isSafeUrl } from '../utils/url';
 import { usePortfolioContext } from '../context/PortfolioContext';
 import '../styles/Skills.css';
 
@@ -25,14 +26,15 @@ const Skills = () => {
 
 const SkillCard = ({ skill }) => {
   const [imgError, setImgError] = useState(false);
-  const showImg = skill.logo_url && !imgError;
+  const safeLogo = skill.logo_url && isSafeUrl(skill.logo_url) ? skill.logo_url : '';
+  const showImg = safeLogo && !imgError;
   return (
     <div className="skill-item" tabIndex={0}>
       <div className="skill-inner">
         <div className="skill-logo">
           {showImg ? (
             <img
-              src={skill.logo_url}
+              src={safeLogo}
               alt={skill.name}
               loading="lazy"
               decoding="async"

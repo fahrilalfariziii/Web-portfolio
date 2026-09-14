@@ -2,6 +2,7 @@ import React from 'react';
 import { useEffect } from 'react';
 import { trackSectionView } from '../utils/analytics';
 import { asset } from '../utils/assetPath';
+import { isSafeUrl } from '../utils/url';
 import { usePortfolioContext } from '../context/PortfolioContext';
 import '../styles/About.css';
 
@@ -13,34 +14,38 @@ const About = () => {
   }, []);
 
   const socials = profile?.socials || {};
-  const photoSrc = profile?.photo_url || asset('assets/profile.png');
+  const rawPhoto = profile?.photo_url;
+  const photoSrc = rawPhoto && isSafeUrl(rawPhoto) ? rawPhoto : asset('assets/profile.png');
   const firstEdu = education?.[0];
+
+  const safeCredential = profile?.credential_url && isSafeUrl(profile.credential_url) ? profile.credential_url : '';
+  const safeResume = profile?.resume_url && isSafeUrl(profile.resume_url) ? profile.resume_url : '';
 
   return (
     <section id="home" className="about">
       <div className="profile-section">
         <div className="profile-image">
-          <img src={photoSrc} alt="Profile" />
+          <img src={photoSrc} alt="Profile" referrerPolicy="no-referrer" />
         </div>
         <div className="social-links">
-          {socials.linkedin && (
+          {socials.linkedin && isSafeUrl(socials.linkedin) && (
             <a href={socials.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
               <img src={asset('assets/linkedin.svg')} alt="LinkedIn" />
             </a>
           )}
-          {socials.instagram && (
+          {socials.instagram && isSafeUrl(socials.instagram) && (
             <a href={socials.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
               <img src={asset('assets/instagram.svg')} alt="Instagram" />
             </a>
           )}
-          {socials.github && (
+          {socials.github && isSafeUrl(socials.github) && (
             <a href={socials.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub">
               <img src={asset('assets/github.svg')} alt="GitHub" />
             </a>
           )}
         </div>
-        {profile?.resume_url && (
-          <a className="link-credensial" href={profile.resume_url} target="_blank" rel="noopener noreferrer" style={{ marginTop: 16 }}>
+        {safeResume && (
+          <a className="link-credensial" href={safeResume} target="_blank" rel="noopener noreferrer" style={{ marginTop: 16 }}>
             Download Resume&#8599;
           </a>
         )}
@@ -77,8 +82,8 @@ const About = () => {
           <div className="interests">
             <h3>LICENCE & CREDENTIAL</h3> 
             <p>
-            {profile?.credential_url ? (
-              <a className="link-credensial" href={profile.credential_url} target='blank'>
+            {safeCredential ? (
+              <a className="link-credensial" href={safeCredential} target="_blank" rel="noopener noreferrer">
                 Visit Link&#8599;
               </a >
             ) : (

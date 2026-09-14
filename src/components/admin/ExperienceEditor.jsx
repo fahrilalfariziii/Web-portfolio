@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { supabase } from '../../lib/supabase';
+import { adminList, adminCreate, adminUpdate, adminDelete } from '../../lib/apiClient';
+import { isSafeUrl } from '../../utils/url';
 
 const blank = { type: 'works', title: '', company: '', date_text: '', bullets: '', link_url: '', sort_order: 0 };
 
@@ -9,36 +10,38 @@ const ExperienceEditor = () => {
   const [form, setForm] = useState(blank);
   const [editingId, setEditingId] = useState(null);
   const [msg, setMsg] = useState('');
+  const [msgType, setMsgType] = useState('notice');
 
   const load = async () => {
-    const { data } = await supabase.from('experiences').select('*').order('sort_order');
-    if (data) setRows(data);
+    try {
+      const data = await adminList('experiences');
+      setRows(data);
+    } catch (e) { setMsg(e.message); setMsgType('error'); }
   };
   useEffect(() => { load(); }, []);
 
   const onSubmit = async (e) => {
     e.preventDefault();
     setMsg('');
-    const bullets = form.bullets.split('\n').map((s) => s.trim()).filter(Boolean);
+    if (form.link_url && !isSafeUrl(form.link_url)) { setMsg('Link URL harus https/http'); setMsgType('error'); return; }
+    const bullets = form.bullets.split('\n').map((s) => s.trim()).filter(Boolean).slice(0, 20);
     const payload = {
       type: form.type,
-      title: form.title,
-      company: form.company,
-      date_text: form.date_text,
+      title: form.title.trim(),
+      company: form.company.trim(),
+      date_text: form.date_text.trim(),
       bullets,
       link_url: form.link_url || '',
       sort_order: Number(form.sort_order) || 0,
     };
-    const { error } = editingId
-      ? await supabase.from('experiences').update(payload).eq('id', editingId)
-      : await supabase.from('experiences').insert(payload);
-    if (error) setMsg(`Gagal: ${error.message}`);
-    else {
-      setMsg('Tersimpan.');
+    try {
+      if (editingId) await adminUpdate('experiences', editingId, payload);
+      else await adminCreate('experiences', payload);
+      setMsg('Tersimpan.'); setMsgType('notice');
       setForm(blank);
       setEditingId(null);
       load();
-    }
+    } catch (err) { setMsg(`Gagal: ${err.message}`); setMsgType('error'); }
   };
 
   const onEdit = (r) => {
@@ -49,32 +52,26 @@ const ExperienceEditor = () => {
     });
   };
 
-  const onDelete = async (id) => {
-    if (!confirm('Hapus pengalaman ini?')) return;
-    const { error } = await supabase.from('experiences').delete().eq('id', id);
-    if (!error) load();
-  };
-
   const shown = filter === 'all' ? rows : rows.filter((r) => r.type === filter);
 
   return (
     <div>
-      {msg && <p className="admin-notice">{msg}</p>}
+      {msg && <p className={msgType==='error'?'admin-error':'admin-notice'}>{msg}</p>}
       <form className="admin-form" onSubmit={onSubmit}>
         <div className="admin-grid3">
           <label>Tipe<select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value })}>
             <option value="works">works</option>
             <option value="professional">professional</option>
           </select></label>
-          <label>Judul/Posisi<input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required /></label>
-          <label>Perusahaan<input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} required /></label>
+          <label>Judul/Posisi<input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required maxLength={80} /></label>
+          <label>Perusahaan<input value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} required maxLength={80} /></label>
         </div>
         <div className="admin-grid3">
-          <label>Periode<input value={form.date_text} onChange={(e) => setForm({ ...form, date_text: e.target.value })} placeholder="Aug - Sep 2024" /></label>
-          <label>Link (opsional)<input value={form.link_url} onChange={(e) => setForm({ ...form, link_url: e.target.value })} /></label>
+          <label>Periode<input value={form.date_text} onChange={(e) => setForm({ ...form, date_text: e.target.value })} placeholder="Aug - Sep 2024" maxLength={40} /></label>
+          <label>Link (opsional)<input type="url" value={form.link_url} onChange={(e) => setForm({ ...form, link_url: e.target.value })} placeholder="https://..." /></label>
           <label>Urutan<input type="number" value={form.sort_order} onChange={(e) => setForm({ ...form, sort_order: e.target.value })} /></label>
         </div>
-        <label>Poin-poin (satu baris = satu bullet)<textarea rows={4} value={form.bullets} onChange={(e) => setForm({ ...form, bullets: e.target.value })} /></label>
+        <label>Poin-poin (satu baris = satu bullet, max 20)<textarea rows={4} value={form.bullets} onChange={(e) => setForm({ ...form, bullets: e.target.value })} maxLength={2000} /></label>
         <div className="admin-row">
           <button className="admin-btn primary" type="submit">{editingId ? 'Update' : 'Tambah'}</button>
           {editingId && <button type="button" className="admin-btn" onClick={() => { setEditingId(null); setForm(blank); }}>Batal</button>}
@@ -91,7 +88,7 @@ const ExperienceEditor = () => {
             <div><strong>[{r.type}] {r.title}</strong><div className="admin-muted">{r.company} • {r.date_text}</div></div>
             <div className="admin-row">
               <button className="admin-btn small" onClick={() => onEdit(r)}>Edit</button>
-              <button className="admin-btn small danger" onClick={() => onDelete(r.id)}>Hapus</button>
+              <button className="admin-btn small danger" onClick={async () => { if (confirm('Hapus pengalaman ini?')) { try { await adminDelete('experiences', r.id); load(); } catch(e){setMsg(e.message); setMsgType('error');} } }}>Hapus</button>
             </div>
           </div>
         ))}

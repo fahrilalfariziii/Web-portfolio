@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import { isSupabaseConfigured } from '../../lib/supabase';
 import '../../styles/Admin.css';
 
 const AdminLogin = () => {
@@ -20,9 +19,19 @@ const AdminLogin = () => {
   const onSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    // Basic client-side validation
+    const trimmedEmail = email.trim().toLowerCase();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      setError('Format email tidak valid');
+      return;
+    }
+    if (password.length < 6) {
+      setError('Password minimal 6 karakter');
+      return;
+    }
     setLoading(true);
     try {
-      await signIn(email.trim(), password);
+      await signIn(trimmedEmail, password);
       navigate('/admin', { replace: true });
     } catch (err) {
       setError(err?.message || 'Login gagal. Periksa email/password.');
@@ -35,20 +44,15 @@ const AdminLogin = () => {
     <div className="admin-auth-wrap">
       <form className="admin-card admin-login" onSubmit={onSubmit}>
         <h1>CMS Login</h1>
-        <p className="admin-muted">Satu akun admin (email + password Supabase Auth).</p>
-        {!isSupabaseConfigured && (
-          <p className="admin-error">
-            Supabase belum dikonfigurasi. Set VITE_SUPABASE_URL dan VITE_SUPABASE_ANON_KEY dulu.
-          </p>
-        )}
+        <p className="admin-muted">Satu akun admin (email + password Supabase Auth via server).</p>
         {error && <p className="admin-error">{error}</p>}
         <label>
           Email
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" />
+          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required autoComplete="email" maxLength={80} />
         </label>
         <label>
           Password
-          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" />
+          <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required autoComplete="current-password" minLength={6} maxLength={128} />
         </label>
         <button className="admin-btn primary" type="submit" disabled={loading}>
           {loading ? 'Masuk...' : 'Masuk Dashboard'}
