@@ -2,53 +2,88 @@ import React from 'react';
 import { useEffect } from 'react';
 import { trackSectionView } from '../utils/analytics';
 import { asset } from '../utils/assetPath';
+import { usePortfolioContext } from '../context/PortfolioContext';
 import '../styles/About.css';
 
 const About = () => {
+  const { profile, education } = usePortfolioContext();
+
   useEffect(() => {
     trackSectionView('home');
   }, []);
+
+  const socials = profile?.socials || {};
+  const photoSrc = profile?.photo_url || asset('assets/profile.png');
+  const firstEdu = education?.[0];
 
   return (
     <section id="home" className="about">
       <div className="profile-section">
         <div className="profile-image">
-          <img src={asset('assets/profile.png')} alt="Profile" />
+          <img src={photoSrc} alt="Profile" />
         </div>
         <div className="social-links">
-          <a href="https://www.linkedin.com/in/fahril-sidik-alfarizi/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
-            <img src={asset('assets/linkedin.svg')} alt="LinkedIn" />
-          </a>
-          <a href="https://www.instagram.com/fhrlalfrz_?igsh=bGMxcG1yNWxjdjdu" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
-            <img src={asset('assets/instagram.svg')} alt="Instagram" />
-          </a>
-          <a href="https://github.com/fahrilalfariziii" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
-            <img src={asset('assets/github.svg')} alt="GitHub" />
-          </a>
+          {socials.linkedin && (
+            <a href={socials.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+              <img src={asset('assets/linkedin.svg')} alt="LinkedIn" />
+            </a>
+          )}
+          {socials.instagram && (
+            <a href={socials.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+              <img src={asset('assets/instagram.svg')} alt="Instagram" />
+            </a>
+          )}
+          {socials.github && (
+            <a href={socials.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+              <img src={asset('assets/github.svg')} alt="GitHub" />
+            </a>
+          )}
         </div>
+        {profile?.resume_url && (
+          <a className="link-credensial" href={profile.resume_url} target="_blank" rel="noopener noreferrer" style={{ marginTop: 16 }}>
+            Download Resume&#8599;
+          </a>
+        )}
       </div>
       <div className="about-content">
-        <h1>Fahril Sidik Alfarizi</h1>
-        <h2>AI/ML Engineer | AI Automation | Data Scientist | Frontend Developer</h2>
-        <p>
-          I am a AI Engineer with a focus on Machine Learning and Deep Learning.
-          I am a Computer Science/Information Engineering graduate from the Garut Institute of Technology
-          and a graduate of Bangkit Academy 2024 Batch 1 (Machine Learning path). I have experience
-          building deep learning models using TensorFlow, from data processing to implementation,
-          and am interested in creating innovative data-driven solutions.
-        </p>
+        <h1>{profile?.full_name}</h1>
+        <h2>{profile?.tagline}</h2>
+        <p>{profile?.bio}</p>
         <div className="about-bottom">
           <div className="education">
             <h3>EDUCATION</h3>
-            <h4>Computer Science/Informatics Engineering</h4>
-            <p>Garut Institute of Technology<br />2021 - 2025</p>
+            {firstEdu ? (
+              <>
+                <h4>{firstEdu.major}</h4>
+                <p>{firstEdu.school}<br />{firstEdu.start_year} - {firstEdu.end_year}</p>
+                {education.length > 1 && (
+                  <div style={{ marginTop: 16 }}>
+                    {education.slice(1).map((edu) => (
+                      <div key={edu.id} style={{ marginTop: 12 }}>
+                        <h4>{edu.major}</h4>
+                        <p>{edu.school}<br />{edu.start_year} - {edu.end_year}</p>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <h4>Computer Science/Informatics Engineering</h4>
+                <p>Garut Institute of Technology<br />2021 - 2025</p>
+              </>
+            )}
           </div>
           <div className="interests">
             <h3>LICENCE & CREDENTIAL</h3> 
             <p>
-            <a className="link-credensial" href="https://www.notion.so/Licence-Credential-Fahril-Sidik-Alfarizi-6db2fb315d884612aef994a956ece0c5?source=copy_link" target='blank'>
-              Visit Link&#8599;
-            </a >
+            {profile?.credential_url ? (
+              <a className="link-credensial" href={profile.credential_url} target='blank'>
+                Visit Link&#8599;
+              </a >
+            ) : (
+              <span>-</span>
+            )}
             </p>
           </div>
         </div>

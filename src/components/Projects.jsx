@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { trackSectionView } from '../utils/analytics';
 import { asset } from '../utils/assetPath';
-import projectsData from '../data/Projects.json';
-import projectsData2 from '../data/Projects2.json';
+import { usePortfolioContext } from '../context/PortfolioContext';
 import "../styles/Projects.css";
 
 const Projects = () => {
+  const { projects } = usePortfolioContext();
   const [filter, setFilter] = useState("all");
   const [showAll, setShowAll] = useState(false);
 
@@ -19,13 +19,21 @@ const Projects = () => {
   }, [filter]);
 
   // Combine JSON objects and convert to array
-  const allProjectsData = { ...projectsData, ...projectsData2 };
-  const projects = Object.values(allProjectsData);
+  const allProjects = (projects || []).filter((p) => p.is_visible !== false);
+  const normalized = allProjects.map((p) => ({
+    ...p,
+    categories: p.category || p.categories,
+    technologies: Array.isArray(p.technologies) ? p.technologies : [],
+    year: p.year_text || p.year,
+    webURL: p.web_url || p.webURL,
+    repoUrl: p.repo_url || p.repoUrl,
+  }));
+  const projectsList = normalized;
 
   // Filter projects based on selected category
   const filteredProjects = filter === "all" 
-    ? projects 
-    : projects.filter(project => project.categories === filter);
+    ? projectsList 
+    : projectsList.filter(project => project.categories === filter);
 
   // Determine which projects to display
   const shouldShowMoreButton = filteredProjects.length > 3;

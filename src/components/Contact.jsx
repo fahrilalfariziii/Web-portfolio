@@ -1,12 +1,19 @@
 import React from "react";
 import { useEffect } from "react";
 import { trackSectionView } from "../utils/analytics";
+import { usePortfolioContext } from "../context/PortfolioContext";
 import "../styles/Contact.css";
 
 const Contact = () => {
+  const { profile, siteSettings } = usePortfolioContext();
+
   useEffect(() => {
     trackSectionView("contact");
   }, []);
+
+  const formAction = siteSettings?.formspree_id
+    ? `https://formspree.io/f/${siteSettings.formspree_id}`
+    : "https://formspree.io/f/xeopjjeg";
 
   return (
     <section id="contact" className="contact">
@@ -18,19 +25,19 @@ const Contact = () => {
           <div className="info-item">
             <h3>EMAIL</h3>
             <p>
-              <a href="mailto:fahrilsidik207@gmail.com" className="contact-link">
-                fahrilsidik207@gmail.com
+              <a href={`mailto:${profile?.email}`} className="contact-link">
+                {profile?.email}
               </a>
             </p>
           </div>
-          
+           
           <div className="info-item">
             <h3>LOCATION</h3>
-            <p>West Java, Indonesia</p>
+            <p>{profile?.location}</p>
           </div>
         </div>
 
-        <form className="contact-form" action="https://formspree.io/f/xeopjjeg" method="POST">
+        <form className="contact-form" action={formAction} method="POST">
           <div className="form-group">
             <input 
               type="text" 
