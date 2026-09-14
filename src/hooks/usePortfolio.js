@@ -79,5 +79,45 @@ export function usePortfolio() {
     fetchAll();
   }, [fetchAll]);
 
+  // Realtime: auto refresh ketika admin mengubah skills/projects/profile dll
+  useEffect(() => {
+    if (!isSupabaseConfigured || !supabase) return;
+    // Supabase Realtime butuh replication enabled di dashboard untuk tiap tabel.
+    let channel = null;
+    try {
+      channel = supabase
+        .channel('portfolio-realtime')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'skills' }, () => fetchAll())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'projects' }, () => fetchAll())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'profile' }, () => fetchAll())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'experiences' }, () => fetchAll())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'education' }, () => fetchAll())
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'site_settings' }, () => fetchAll())
+        .subscribe((status) => {
+          if (status === 'SUBSCRIBED') {
+            // console.debug('[portfolio] realtime subscribed');
+          }
+        });
+    } catch (e) {
+      console.warn('[portfolio] realtime setup failed', e?.message);
+    }
+    return () => {
+      if (channel) supabase.removeChannel(channel);
+    };
+  }, [fetchAll]);
+
+  // Fallback polling gentle jika realtime tidak aktif (misal replication belum enabled)
+  useEffect(() => {
+    if (!isSupabaseConfigured) return;
+    const onFocus = () => fetchAll();
+    const onVisible = () => { if (document.visibilityState === 'visible') fetchAll(); };
+    window.addEventListener('focus', onFocus);
+    document.addEventListener('visibilitychange', onVisible);
+    return () => {
+      window.removeEventListener('focus', onFocus);
+      document.removeEventListener('visibilitychange', onVisible);
+    };
+  }, [fetchAll]);
+
   return { ...data, loading, usingFallback, error, refresh: fetchAll };
 }

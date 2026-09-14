@@ -20,7 +20,7 @@
 .skills-grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 40px;
+  gap: 28px;
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
@@ -28,26 +28,23 @@
 }
 
 .skill-item {
-  width: 100px;
-  height: 100px;
+  width: 104px;
+  height: 104px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--bg-primary);
   border: 1px solid var(--border-color);
-  border-radius: 50px;
-  padding: 15px;
-  transition: transform 0.2s, background-color 0.3s ease, border-color 0.3s ease;
+  border-radius: 50%;
+  padding: 0;
+  transition: transform 0.2s, background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+  position: relative;
 }
 
 .skill-item:hover {
-  transform: scale(1.1);
-}
-
-.skill-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 10px 24px rgba(0,0,0,0.08);
 }
 
 /* Container inside skill-item to position overlay */
@@ -58,27 +55,64 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+/* Fixed-size logo box so all logos look uniform regardless of source aspect ratio */
+.skill-logo {
+  width: 72px;
+  height: 72px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  padding: 10px;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.skill-logo img {
+  width: 100%;
+  height: 100%;
+  max-width: 52px;
+  max-height: 52px;
+  object-fit: contain;
+  object-position: center;
+  display: block;
+}
+
+.skill-fallback {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 16px;
+  letter-spacing: 0.06em;
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+  border-radius: 50%;
+  border: 1px solid var(--divider-color);
 }
 
 /* Overlay that appears on hover/focus */
 .skill-overlay {
   position: absolute;
-  left: -15px;
-  right: -15px;
-  bottom: -15px;
-  top: -15px;
+  inset: 0;
   background: var(--overlay-bg);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   color: var(--text-primary);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 5px;
   opacity: 0;
-  transform: translateY(6px);
+  transform: scale(0.96);
   transition: opacity 180ms ease, transform 180ms ease, background-color 0.3s ease, color 0.3s ease;
-  border-radius: 50px;
-  padding: 8px 4px;
+  border-radius: 50%;
+  padding: 10px 8px;
   text-align: center;
   overflow: hidden;
 }
@@ -88,20 +122,21 @@
 .skill-item:focus .skill-overlay,
 .skill-item:focus-within .skill-overlay {
   opacity: 1;
-  transform: translateY(0);
+  transform: scale(1);
 }
 
 .skill-name {
-  font-size: 12px;
-  font-weight: 600;
+  font-size: 11.5px;
+  font-weight: 700;
   line-height: 1.2;
-  max-width: 100%;
+  max-width: 88%;
   word-wrap: break-word;
   flex-shrink: 0;
+  letter-spacing: 0.02em;
 }
 
 .progress-track {
-  width: 75%;
+  width: 64%;
   height: 6px;
   background: #a8a8a8;
   border-radius: 999px;
@@ -120,16 +155,16 @@
 
 .percent {
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   flex-shrink: 0;
   line-height: 1;
+  opacity: 0.9;
 }
 
 @media (max-width: 1024px) { 
   .skills {
     padding: 80px 40px;
   }
-  
 }
 
 @media (max-width: 768px) {
@@ -143,21 +178,37 @@
   }
 
   .skills-grid {
-    gap: 20px;
+    gap: 18px;
   }
 
   .skill-item {
-    width: 80px;
-    height: 80px;
+    width: 84px;
+    height: 84px;
   }
 
-  /* Maintain same overlay behavior as desktop but adjust sizes */
+  .skill-logo {
+    width: 60px;
+    height: 60px;
+    padding: 8px;
+  }
+
+  .skill-logo img {
+    max-width: 44px;
+    max-height: 44px;
+  }
+
+  .skill-fallback {
+    width: 44px;
+    height: 44px;
+    font-size: 14px;
+  }
+
   .skill-name {
     font-size: 10px;
   }
 
   .progress-track {
-    width: 70%;
+    width: 68%;
     height: 5px;
   }
 
@@ -166,25 +217,22 @@
   }
 
   .skill-overlay {
-    padding: 6px 3px;
+    padding: 6px 4px;
     gap: 3px;
   }
 
-  /* .progress-track {
-    width: 70%;
-    height: 6px;
-  }
-
-  .percent {
-    font-size: 11px;
-  } */
-
-  /* Show overlay only on touch */
   .skill-item:active .skill-overlay {
     opacity: 1;
-    transform: translateY(0);
-    /* background: rgb(255, 255, 255); */
-    /* border-radius: 12px; */
-    /* padding: 0; */
+    transform: scale(1);
+  }
+}
+
+@media (max-width: 420px) {
+  .skills-grid {
+    gap: 14px;
+  }
+  .skill-item {
+    width: 76px;
+    height: 76px;
   }
 }
