@@ -7,8 +7,8 @@ const TABLE_CONFIG = {
   experiences: { allowed: ['type','title','company','date_text','bullets','link_url','sort_order'] },
   skills: { allowed: ['name','logo_url','level','sort_order'] },
   projects: { allowed: ['title','description','technologies','category','year_text','web_url','repo_url','sort_order','is_visible'] },
-  site_settings: { alias: 'site_settings', allowed: ['formspree_id','footer_text'] },
-  siteSettings: { alias: 'site_settings', allowed: ['formspree_id','footer_text'] },
+  site_settings: { alias: 'site_settings', allowed: ['formspree_id','footer_text'], singleRow: true },
+  siteSettings: { alias: 'site_settings', allowed: ['formspree_id','footer_text'], singleRow: true },
 };
 
 function sanitizePayload(table, payload) {
@@ -84,17 +84,16 @@ export default async function handler(req, res) {
 
   try {
     if (req.method === 'GET') {
-      // For admin lists, support limit
-      const limit = Math.min(parseInt(url.searchParams.get('limit') || '100', 10) || 100, 200);
-      const { data, error } = await supabase.from(table).select('*').order('sort_order', { ascending: true }).limit(limit);
-      if (error) throw error;
-      // Single-row tables: return object
+      // Single-row tables (profile, site_settings) tidak punya sort_order
       if (cfg.singleRow) {
-        // Try maybeSingle for profile/site_settings semantics
         const { data: single, error: e2 } = await supabase.from(table).select('*').limit(1).maybeSingle();
         if (e2) throw e2;
         return json(res, 200, { data: single });
       }
+      // For admin lists, support limit
+      const limit = Math.min(parseInt(url.searchParams.get('limit') || '100', 10) || 100, 200);
+      const { data, error } = await supabase.from(table).select('*').order('sort_order', { ascending: true }).limit(limit);
+      if (error) throw error;
       return json(res, 200, { data });
     }
 
@@ -122,14 +121,11 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'PUT' || req.method === 'PATCH') {
-      const id = url.searchParams.get('id') || body.id;
-      if (!id) return json(res, 400, { error: 'Missing id' });
       const payload = sanitizePayload(tableKey, body);
       delete payload.id;
       validatePayload(tableKey, payload);
-      // Special handling for single-row tables (profile/site_settings) - upsert
+      // Special handling for single-row tables (profile/site_settings) - upsert tanpa butuh id
       if (cfg.singleRow) {
-        // Add updated_at
         if (table === 'profile') payload.updated_at = new Date().toISOString();
         const { data: existing } = await supabase.from(table).select('id').limit(1).maybeSingle();
         let result;
@@ -141,6 +137,8 @@ export default async function handler(req, res) {
         if (result.error) throw result.error;
         return json(res, 200, { data: result.data });
       }
+      const id = url.searchParams.get('id') || body.id;
+      if (!id) return json(res, 400, { error: 'Missing id' });
       const { data, error } = await supabase.from(table).update(payload).eq('id', id).select().maybeSingle();
       if (error) throw error;
       return json(res, 200, { data });
@@ -159,8 +157,9 @@ export default async function handler(req, res) {
   } catch (e) {
     console.error(`[api/admin:${table}]`, e.message);
     const status = e.status || 500;
-    // Do not leak internal Supabase error details for 500
-    const msg = status >= 500 ? 'Internal error' : e.message;
+    // In production hide 500 details, but include hint for sort_order bug
+    const isDev = process.env.NODE_ENV !== 'production';
+    const msg = status >= 500 && !isDev ? 'Internal error' : (e.message || 'Internal error');
     return json(res, status, { error: msg });
   }
 }
