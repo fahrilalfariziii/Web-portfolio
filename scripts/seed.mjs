@@ -1,17 +1,17 @@
 // Seed data awal portfolio ke Supabase.
 // Cara pakai:
-//   1. Isi .env dengan VITE_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (jangan pakai anon key)
+//   1. Isi .env dengan SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY (server-only, jangan pakai VITE_)
 //   2. npm run seed
 // Service role key hanya untuk seeding lokal, JANGAN commit ke repo / pasang di Vercel.
 import 'dotenv/config';
 import { createClient } from '@supabase/supabase-js';
 import { readFileSync } from 'node:fs';
 
-const url = process.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
+const url = process.env.SUPABASE_URL;
 const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!url || !serviceKey) {
-  console.error('Butuh VITE_SUPABASE_URL dan SUPABASE_SERVICE_ROLE_KEY di .env');
+  console.error('Butuh SUPABASE_URL dan SUPABASE_SERVICE_ROLE_KEY di .env (tanpa prefix VITE_)');
   process.exit(1);
 }
 
