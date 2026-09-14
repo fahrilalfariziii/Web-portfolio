@@ -128,14 +128,13 @@ export default async function handler(req, res) {
       contentType: isSvg ? 'image/svg+xml' : normalizedType,
     });
     if (error) throw error;
-    // Untuk bucket resumes: jangan expose supabase domain, kembalikan custom link
+    // Jangan pernah expose supabase.co di response - kembalikan proxy custom
     if (bucket === 'resumes') {
-      // Simpan path saja di DB via ProfileEditor, frontend pakai /api/resume
       return json(res, 200, { url: '/api/resume', path });
     }
-    const { data } = supabase.storage.from(bucket).getPublicUrl(path);
-    if (!data?.publicUrl) throw new Error('Gagal mendapatkan URL publik');
-    return json(res, 200, { url: data.publicUrl, path });
+    // Untuk skill-logos & profile-photos hide supabase domain via proxy
+    const proxyUrl = `/api/file?bucket=${encodeURIComponent(bucket)}&path=${encodeURIComponent(path)}`;
+    return json(res, 200, { url: proxyUrl, path });
   } catch (e) {
     console.error('[api/upload]', e.message);
     return json(res, 500, { error: e.message || 'Upload gagal' });
