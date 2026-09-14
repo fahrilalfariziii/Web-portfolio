@@ -15,6 +15,15 @@ const emptyProfile = {
   socials: { linkedin: '', instagram: '', github: '' },
 };
 
+function isResumeValueValid(v) {
+  if (!v) return true;
+  // Custom proxy link hide supabase domain
+  if (v === '/api/resume' || v.startsWith('/api/resume')) return true;
+  // Legacy: allow stored supabase path like resume/xxx.pdf (no domain) - treat as internal
+  if (!v.startsWith('http') && v.includes('/')) return true;
+  return isSafeUrl(v);
+}
+
 const ProfileEditor = () => {
   const [form, setForm] = useState(emptyProfile);
   const [loading, setLoading] = useState(true);
@@ -46,7 +55,7 @@ const ProfileEditor = () => {
     try {
       const url = kind === 'photo' ? await uploadProfilePhoto(file) : await uploadResume(file);
       set(kind === 'photo' ? 'photo_url' : 'resume_url', url);
-      setMsg('Upload berhasil, klik Simpan untuk menyimpan.');
+      setMsg(kind === 'resume' ? 'Upload resume berhasil — link download sekarang via /api/resume (custom, tidak bocor project ref). Klik Simpan.' : 'Upload berhasil, klik Simpan untuk menyimpan.');
       setMsgType('notice');
     } catch (e) {
       setMsg(`Upload gagal: ${e.message}`);
@@ -58,11 +67,20 @@ const ProfileEditor = () => {
 
   const onSave = async (e) => {
     e.preventDefault();
-    // Client-side URL validation
-    const toCheck = [form.photo_url, form.resume_url, form.credential_url, form.socials.linkedin, form.socials.instagram, form.socials.github].filter(Boolean);
-    for (const u of toCheck) {
-      if (!isSafeUrl(u)) {
-        setMsg(`URL tidak aman: ${u} — hanya https/http diperbolehkan`);
+    // Client-side URL validation (resume boleh /api/resume)
+    const toCheck = [
+      { v: form.photo_url, name: 'Foto' },
+      { v: form.resume_url, name: 'Resume', allowResume: true },
+      { v: form.credential_url, name: 'Credential' },
+      { v: form.socials.linkedin, name: 'LinkedIn' },
+      { v: form.socials.instagram, name: 'Instagram' },
+      { v: form.socials.github, name: 'GitHub' },
+    ];
+    for (const { v, name, allowResume } of toCheck) {
+      if (!v) continue;
+      const ok = allowResume ? isResumeValueValid(v) : isSafeUrl(v);
+      if (!ok) {
+        setMsg(`URL ${name} tidak aman: ${v} — hanya https/http atau /api/resume diperbolehkan`);
         setMsgType('error');
         return;
       }
@@ -90,6 +108,8 @@ const ProfileEditor = () => {
 
   if (loading) return <p className="admin-muted">Memuat profile...</p>;
 
+  const resumeIsProxy = form.resume_url === '/api/resume' || form.resume_url?.startsWith('/api/resume');
+
   return (
     <form className="admin-form" onSubmit={onSave}>
       {msg && <p className={msgType === 'error' ? 'admin-error' : 'admin-notice'}>{msg}</p>}
@@ -110,13 +130,15 @@ const ProfileEditor = () => {
       </div>
       <div className="admin-grid2">
         <label>Foto profile URL<input type="url" value={form.photo_url} onChange={(e) => set('photo_url', e.target.value)} placeholder="https://... atau upload" /></label>
-        <label>Resume URL (PDF)<input type="url" value={form.resume_url} onChange={(e) => set('resume_url', e.target.value)} placeholder="https://... atau upload" /></label>
+        <label>Resume (via proxy)<input value={form.resume_url} onChange={(e) => set('resume_url', e.target.value)} placeholder="/api/resume (otomatis setelah upload)" /></label>
       </div>
       <div className="admin-grid2">
         <label>Upload foto baru<input type="file" accept="image/*" onChange={(e) => onFile(e.target.files?.[0], 'photo')} /></label>
         <label>Upload resume (PDF)<input type="file" accept="application/pdf" onChange={(e) => onFile(e.target.files?.[0], 'resume')} /></label>
       </div>
       {form.photo_url && isSafeUrl(form.photo_url) && <img src={form.photo_url} alt="Preview" className="admin-preview" referrerPolicy="no-referrer" />}
+      {resumeIsProxy && <div className="admin-notice">Resume akan diakses via <code>/api/resume</code> — tidak mengekspos <code>supabase.co / project ref</code>. Test: <a href="/api/resume" target="_blank" rel="noopener noreferrer">buka /api/resume</a></div>}
+      {form.resume_url && !resumeIsProxy && form.resume_url.startsWith('http') && <div className="admin-error">Resume masih pakai URL supabase langsung ({form.resume_url.slice(0,40)}...). Upload ulang agar jadi <code>/api/resume</code> dan jalankan <code>storage_policies.sql</code> agar bucket jadi private.</div>}
       <button className="admin-btn primary" disabled={saving}>{saving ? 'Menyimpan...' : 'Simpan Profile'}</button>
     </form>
   );

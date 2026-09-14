@@ -1,5 +1,4 @@
 import { getSupabaseAnon, json } from './_supabase.js';
-import { createClient } from '@supabase/supabase-js';
 
 // Cache simple in-memory for 60s to reduce Supabase calls and prevent abuse
 let cache = { data: null, expires: 0 };
@@ -21,7 +20,6 @@ export default async function handler(req, res) {
 
   try {
     const supabase = getSupabaseAnon();
-    // Try anon read first (RLS allows public read)
     const [profileRes, eduRes, expRes, skillRes, projRes, settingsRes] = await Promise.all([
       supabase.from('profile').select('*').order('id').limit(1).maybeSingle(),
       supabase.from('education').select('*').order('sort_order'),
@@ -31,12 +29,19 @@ export default async function handler(req, res) {
       supabase.from('site_settings').select('*').order('id').limit(1).maybeSingle(),
     ]);
 
-    // Collect errors but fallback to empty so page still renders
     const firstError = profileRes.error || eduRes.error || expRes.error || skillRes.error || projRes.error || settingsRes.error;
     if (firstError) throw firstError;
 
+    // Hide Supabase project ref for resume: never expose raw storage URL to frontend
+    // Frontend will use /api/resume proxy instead
+    let profile = profileRes.data || null;
+    if (profile && profile.resume_url) {
+      // If resume exists, rewrite to custom link so DB URL tidak bocor
+      profile = { ...profile, resume_url: '/api/resume' };
+    }
+
     const data = {
-      profile: profileRes.data || null,
+      profile,
       education: eduRes.data || [],
       experiences: expRes.data || [],
       skills: skillRes.data || [],

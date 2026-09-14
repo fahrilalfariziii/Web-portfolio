@@ -19,7 +19,8 @@ const About = () => {
   const firstEdu = education?.[0];
 
   const safeCredential = profile?.credential_url && isSafeUrl(profile.credential_url) ? profile.credential_url : '';
-  const safeResume = profile?.resume_url && isSafeUrl(profile.resume_url) ? profile.resume_url : '';
+  // Resume sekarang via proxy /api/resume agar tidak bocor project ref supabase
+  const hasResume = Boolean(profile?.resume_url);
 
   return (
     <section id="home" className="about">
@@ -44,8 +45,8 @@ const About = () => {
             </a>
           )}
         </div>
-        {safeResume && (
-          <a className="link-credensial" href={safeResume} target="_blank" rel="noopener noreferrer" style={{ marginTop: 16 }}>
+        {hasResume && (
+          <a className="link-credensial" href="/api/resume" target="_blank" rel="noopener noreferrer" style={{ marginTop: 16 }}>
             Download Resume&#8599;
           </a>
         )}

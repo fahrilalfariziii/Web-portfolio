@@ -128,6 +128,11 @@ export default async function handler(req, res) {
       contentType: isSvg ? 'image/svg+xml' : normalizedType,
     });
     if (error) throw error;
+    // Untuk bucket resumes: jangan expose supabase domain, kembalikan custom link
+    if (bucket === 'resumes') {
+      // Simpan path saja di DB via ProfileEditor, frontend pakai /api/resume
+      return json(res, 200, { url: '/api/resume', path });
+    }
     const { data } = supabase.storage.from(bucket).getPublicUrl(path);
     if (!data?.publicUrl) throw new Error('Gagal mendapatkan URL publik');
     return json(res, 200, { url: data.publicUrl, path });

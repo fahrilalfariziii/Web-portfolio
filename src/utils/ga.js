@@ -9,14 +9,21 @@ export function loadGA(measurementId) {
   const existing = document.querySelector(`script[data-gtm-id="${measurementId}"]`);
   if (existing) return;
 
+  // Load gtag.js external script - allowed by CSP script-src https://www.googletagmanager.com
   const script = document.createElement('script');
   script.async = true;
   script.src = `https://www.googletagmanager.com/gtag/js?id=${measurementId}`;
   script.setAttribute('data-gtm-id', measurementId);
   document.head.appendChild(script);
 
-  const inline = document.createElement('script');
-  // Use textContent instead of innerHTML to avoid XSS if measurementId ever attacker-controlled
-  inline.textContent = `window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${measurementId}');`;
-  document.head.appendChild(inline);
+  // Initialize dataLayer/gtag WITHOUT creating an inline <script> element
+  // Direct JS execution is not blocked by CSP script-src (only inline <script> blocks are)
+  window.dataLayer = window.dataLayer || [];
+  if (typeof window.gtag !== 'function') {
+    window.gtag = function gtag() {
+      window.dataLayer.push(arguments);
+    };
+  }
+  window.gtag('js', new Date());
+  window.gtag('config', measurementId);
 }
