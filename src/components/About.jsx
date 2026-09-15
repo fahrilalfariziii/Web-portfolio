@@ -30,17 +30,17 @@ const About = () => {
         </div>
         <div className="social-links">
           {socials.linkedin && isSafeUrl(socials.linkedin) && (
-            <a href={socials.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+            <a href={socials.linkedin} target="_blank" rel="me noopener noreferrer" aria-label="LinkedIn">
               <img src={asset('assets/linkedin.svg')} alt="LinkedIn" />
             </a>
           )}
           {socials.instagram && isSafeUrl(socials.instagram) && (
-            <a href={socials.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+            <a href={socials.instagram} target="_blank" rel="me noopener noreferrer" aria-label="Instagram">
               <img src={asset('assets/instagram.svg')} alt="Instagram" />
             </a>
           )}
           {socials.github && isSafeUrl(socials.github) && (
-            <a href={socials.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+            <a href={socials.github} target="_blank" rel="me noopener noreferrer" aria-label="GitHub">
               <img src={asset('assets/github.svg')} alt="GitHub" />
             </a>
           )}
