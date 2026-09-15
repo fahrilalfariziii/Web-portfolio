@@ -23,21 +23,39 @@ function sanitizePayload(table, payload) {
 
 function isSafeUrl(url) {
   if (!url) return true; // empty allowed
+  // Allow internal proxy paths tanpa bocor supabase.co
+  if (url.startsWith('/api/file') || url.startsWith('/api/resume')) return true;
+  if (url.startsWith('assets/') || url.startsWith('/assets/')) return true;
   try {
-    const u = new URL(url);
+    const u = new URL(url, 'https://example.com');
+    // Hanya allow jika asli pakai https/http
+    if (!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('mailto:')) return false;
     return u.protocol === 'https:' || u.protocol === 'http:' || u.protocol === 'mailto:';
   } catch { return false; }
 }
 
+function isSafeResumePath(v) {
+  if (!v) return true;
+  if (v === '/api/resume' || v.startsWith('/api/resume')) return true;
+  if (v.startsWith('resume/') && v.endsWith('.pdf')) return true;
+  // Legacy supabase URL masih diizinkan tapi akan di-proxy, tetap allow https
+  return isSafeUrl(v);
+}
+
 function validatePayload(table, payload) {
-  // URL fields must be safe
-  const urlFields = ['photo_url','logo_url','resume_url','credential_url','link_url','web_url','repo_url'];
+  // URL fields must be safe (kecuali resume yang bisa path internal)
+  const urlFields = ['photo_url','logo_url','credential_url','link_url','web_url','repo_url'];
   for (const f of urlFields) {
     if (payload[f] && !isSafeUrl(payload[f])) {
-      const e = new Error(`URL tidak aman untuk ${f}: hanya https/http diperbolehkan`);
+      const e = new Error(`URL tidak aman untuk ${f}: hanya https/http atau /api/file diperbolehkan`);
       e.status = 400;
       throw e;
     }
+  }
+  if (payload.resume_url && !isSafeResumePath(payload.resume_url)) {
+    const e = new Error(`URL tidak aman untuk resume_url: hanya /api/resume, resume/*.pdf atau https diperbolehkan`);
+    e.status = 400;
+    throw e;
   }
   if (table === 'skills') {
     if (payload.name && (payload.name.length < 1 || payload.name.length > 80)) { const e=new Error('Nama skill 1-80 karakter'); e.status=400; throw e; }
