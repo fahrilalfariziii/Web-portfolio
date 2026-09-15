@@ -2,14 +2,17 @@ import { getSupabaseService } from './_supabase.js';
 
 function extractResumePath(urlOrPath) {
   if (!urlOrPath) return null;
-  // If already a path like "resume/123.pdf" or "resumes/resume/123.pdf"
+  // If already a path like "resume/123.pdf" (hide domain, simpan path murni)
   if (!urlOrPath.startsWith('http')) {
-    // Normalize: remove leading slash and bucket prefix duplication
     let p = urlOrPath.replace(/^\/+/, '');
-    // If starts with "api/resume", ignore
-    if (p.startsWith('api/')) return null;
-    // If starts with bucket name, strip it
+    // Jika DB masih isi proxy loop lama "/api/resume" -> return null untuk di-handle fallback list
+    if (p === 'api/resume' || p.startsWith('api/resume')) return null;
+    // Jika path sudah "resume/xxx.pdf" langsung pakai
+    if (p.startsWith('resume/')) return p;
+    // Jika bucket prefix salah "resumes/resume/..." strip
     if (p.startsWith('resumes/')) p = p.slice('resumes/'.length);
+    // Jika hanya filename tanpa prefix, anggap di folder resume/
+    if (!p.includes('/')) return `resume/${p}`;
     return p;
   }
   try {
@@ -62,15 +65,26 @@ export default async function handler(req, res) {
     }
 
     const raw = profile.resume_url;
-    const storagePath = extractResumePath(raw);
+    let storagePath = extractResumePath(raw);
 
     if (!storagePath) {
-      // If custom link stored (e.g., /api/resume), we can't extract - return redirect to stored URL if it's safe supabase URL?
-      // Fallback: try to treat raw as direct supabase public URL and redirect with 302 via proxy download attempt
-      res.statusCode = 404;
-      res.setHeader('Content-Type', 'application/json');
-      res.end(JSON.stringify({ error: 'Format resume tidak valid' }));
-      return;
+      // Fallback untuk DB lama yang isi "/api/resume" (loop sebelumnya) → cari file terbaru di bucket tanpa expose domain
+      if (raw === '/api/resume' || raw?.startsWith('/api/resume')) {
+        try {
+          const { data: list, error: listErr } = await supabase.storage.from('resumes').list('resume', { limit: 20, sortBy: { column: 'created_at', order: 'desc' } });
+          if (!listErr && list && list.length > 0) {
+            // Ambil file terbaru (created_at desc sudah)
+            const latest = list[0];
+            storagePath = `resume/${latest.name}`;
+          }
+        } catch {}
+      }
+      if (!storagePath) {
+        res.statusCode = 404;
+        res.setHeader('Content-Type', 'application/json');
+        res.end(JSON.stringify({ error: 'Resume belum tersedia, silakan upload ulang via /admin (DB masih /api/resume)' }));
+        return;
+      }
     }
 
     // Download via service_role (works even if bucket private)

@@ -128,9 +128,10 @@ export default async function handler(req, res) {
       contentType: isSvg ? 'image/svg+xml' : normalizedType,
     });
     if (error) throw error;
-    // Jangan pernah expose supabase.co di response - kembalikan proxy custom
+    // Jangan pernah expose supabase.co di response
     if (bucket === 'resumes') {
-      return json(res, 200, { url: '/api/resume', path });
+      // Simpan path murni (resume/xxx.pdf) di DB, frontend tetap pakai /api/resume via portfolio rewrite
+      return json(res, 200, { url: path, path });
     }
     // Untuk skill-logos & profile-photos hide supabase domain via proxy
     const proxyUrl = `/api/file?bucket=${encodeURIComponent(bucket)}&path=${encodeURIComponent(path)}`;
